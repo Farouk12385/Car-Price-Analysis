@@ -1,0 +1,76 @@
+##################################
+### TASK 3 : TARGET CREATION ###
+##################################
+
+print("= - data_preprocessing.py:163"*60)
+print("TASK 3: Creating Two Target Variables - data_preprocessing.py:164")
+print("= - data_preprocessing.py:165"*60)
+
+# ============================================
+# A. Regression Target
+# ============================================
+print("\n A. Regression Target - data_preprocessing.py:170")
+y_regression = df['price']
+print(f"✓ Regression target created: price - data_preprocessing.py:172")
+print(f"Shape: {y_regression.shape} - data_preprocessing.py:173")
+print(f"Price range: ${y_regression.min():.2f}  ${y_regression.max():.2f} - data_preprocessing.py:174")
+print(f"Mean price: ${y_regression.mean():.2f} - data_preprocessing.py:175")
+print(f"Median price: ${y_regression.median():.2f} - data_preprocessing.py:176")
+
+# ============================================
+# B. Classification Target
+# ============================================
+print("\n B. Classification Target - data_preprocessing.py:181")
+
+# Step 1: Determine thresholds using percentiles
+cheap_threshold = df['price'].quantile(0.33)
+expensive_threshold = df['price'].quantile(0.66)
+
+print(f"\n✓ Thresholds determined using data distribution: - data_preprocessing.py:187")
+print(f"Cheap threshold (33rd percentile): <= ${cheap_threshold:.2f} - data_preprocessing.py:188")
+print(f"Expensive threshold (66th percentile): > ${expensive_threshold:.2f} - data_preprocessing.py:189")
+print(f"Moderate: Between ${cheap_threshold:.2f} and ${expensive_threshold:.2f} - data_preprocessing.py:190")
+
+# Justification
+print("\n✓ Justification for threshold choice: - data_preprocessing.py:193")
+print("Using percentiles ensures balanced class distribution - data_preprocessing.py:194")
+print("33 percent of cars fall into each category approximately - data_preprocessing.py:195")
+print("This is better than arbitrary thresholds - data_preprocessing.py:196")
+print("The distribution of car prices is typically skewed - data_preprocessing.py:197")
+
+# Step 2: Classification function
+def classify_price(price):
+    if price <= cheap_threshold:
+        return 'Cheap'
+    elif price <= expensive_threshold:
+        return 'Moderate'
+    else:
+        return 'Expensive'
+
+# Step 3: Apply classification
+df['price_category'] = df['price'].apply(classify_price)
+
+# Step 4: Classification variable
+y_classification = df['price_category']
+
+# Step 5: Show results
+print("\n✓ Classification target created: price_category - data_preprocessing.py:215")
+print("\n Category Distribution - data_preprocessing.py:216")
+category_counts = df['price_category'].value_counts()
+category_percentages = df['price_category'].value_counts(normalize=True) * 100
+
+category_df = pd.DataFrame({
+    'Count': category_counts,
+    'Percentage': category_percentages.round(2)
+})
+print(category_df)
+
+print("\n Additional Statistics - data_preprocessing.py:226")
+print(f"Total cars in Cheap category: {category_counts['Cheap']} cars - data_preprocessing.py:227")
+print(f"Total cars in Moderate category: {category_counts['Moderate']} cars - data_preprocessing.py:228")
+print(f"Total cars in Expensive category: {category_counts['Expensive']} cars - data_preprocessing.py:229")
+print(f"\nPrice range for Cheap: <= ${cheap_threshold:.2f} - data_preprocessing.py:230")
+print(f"Price range for Moderate: ${cheap_threshold:.2f}  ${expensive_threshold:.2f} - data_preprocessing.py:231")
+print(f"Price range for Expensive: > ${expensive_threshold:.2f} - data_preprocessing.py:232")
+
+# ============================================
