@@ -102,7 +102,7 @@
 
 ```bash
 # Clone repo
-git clone https://github.com/your-username/Car-Price-Analysis.git
+git clone https://github.com/Farouk12385/Car-Price-Analysis.git
 
 # Navigate
 cd Car-Price-Analysis

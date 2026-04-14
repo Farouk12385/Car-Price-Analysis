@@ -3,19 +3,16 @@ from EDA import df
                                                 ###Import Library
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 
-from sklearn.impute        import SimpleImputer, KNNImputer
-from sklearn.preprocessing import (OrdinalEncoder, OneHotEncoder,
-                                   StandardScaler, MinMaxScaler,
-                                   RobustScaler, PowerTransformer)
+
+
+from sklearn.impute        import SimpleImputer
+from sklearn.preprocessing import OneHotEncoder,MinMaxScaler 
 import warnings
 warnings.filterwarnings('ignore')
 
 from sklearn.model_selection import train_test_split
-from scipy.ndimage           import gaussian_filter1d
-from scipy.stats             import zscore
+
 
 
 """
@@ -43,13 +40,14 @@ train, test = train_test_split(
 )
 print(f'Train: {train.shape}  |  Test: {test.shape}')
 
-# Define features and target
-X = df.drop(columns='price')
-y = df['price']
-X
-print(f'Features: {X.shape[1]}  |  Samples: {X.shape[0]}')
+# Define features and target — from train/test only, no leakage
+X_train = train.drop(columns='price')
+y_train  = train['price']
 
+X_test  = test.drop(columns='price')
+y_test  = test['price']
 
+print(f'Features: {X_train.shape[1]}  |  Train samples: {X_train.shape[0]}  |  Test samples: {X_test.shape[0]}')
 
 
 
@@ -103,28 +101,15 @@ test  = test.drop(cat_cols, axis=1)
 train = pd.concat([train, train_ohe], axis=1)
 test  = pd.concat([test,  test_ohe],  axis=1)
 
+
+
 print(f'Encoding    Train: {train.shape} | Test: {test.shape} | OHE cols added: {len(ohe_cols)}')
- 
 
 
-                                ###Scale numerical features — important for KNN. Use  MinMaxScaler. 
 
-num_cols = train.select_dtypes(include=np.number).columns
-scaler = MinMaxScaler()
 
-train[num_cols] = scaler.fit_transform(train[num_cols])
-test[num_cols]  = scaler.transform(test[num_cols])
-print(f'Scaling    {len(num_cols)} features scaled to [0,1] | min={train[num_cols].min().min():.2f} | max={train[num_cols].max().max():.2f}')
- 
- 
- 
- 
- 
- 
- 
- 
-                                ###Detect and handle outliers — use  IQR method
-outlier_cols = numeric_cols + [target]
+                                 ###Detect and handle outliers — use  IQR method
+outlier_cols = numeric_cols 
 bounds = {}
  
 for col in outlier_cols:
@@ -144,6 +129,27 @@ for col, (lower, upper) in bounds.items():
  
 print(f'Outliers  Capped {total_capped_train} values in train across {len(outlier_cols)} columns (IQR method)')
 
+
+
+
+
+
+
+                                ###Scale numerical features — important for KNN. Use  MinMaxScaler. 
+
+num_cols = train.select_dtypes(include=np.number).columns
+scaler = MinMaxScaler()
+
+train[num_cols] = scaler.fit_transform(train[num_cols])
+test[num_cols]  = scaler.transform(test[num_cols])
+print(f'Scaling    {len(num_cols)} features scaled to [0,1] | min={train[num_cols].min().min():.2f} | max={train[num_cols].max().max():.2f}')
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 
 
 
