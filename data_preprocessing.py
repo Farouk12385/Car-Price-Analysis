@@ -154,9 +154,10 @@ print(f'Scaling    {len(num_cols)} features scaled to [0,1] | min={train[num_col
 
 
                                            ### Export data
-
+"""
 train.to_csv('train_preprocessed.csv', index=False)
 test.to_csv('test_preprocessed.csv',   index=False)
  
 print(f'Exported   train_preprocessed.csv ({train.shape[0]} rows) & test_preprocessed.csv ({test.shape[0]} rows) saved.')
+"""
                                            
