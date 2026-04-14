@@ -31,6 +31,21 @@ y_train = train[TARGET]
 X_test  = test.drop(columns=[TARGET])
 y_test  = test[TARGET]
 
+
+
+
+# %%
+corr_matrix1 = train.corr(numeric_only=True)
+
+corr_with_price = corr_matrix1['price']
+
+top_corr = corr_with_price.sort_values(ascending=False)
+
+print("\n📊 Top Features Correlated with Price:")
+print(top_corr.head(15).to_string())
+
+
+
 # %%
 # Features Correlation Matrix 
 plt.figure(figsize=(14, 10))
@@ -52,15 +67,7 @@ plt.show()
 
 print(" Plot saved → features_correlation_matrix.png")
 
-# %%
-corr_matrix1 = train.corr(numeric_only=True)
 
-corr_with_price = corr_matrix1['price']
-
-top_corr = corr_with_price.sort_values(ascending=False)
-
-print("\n📊 Top Features Correlated with Price:")
-print(top_corr.head(15).to_string())
 
 # %%
 #  Train 
